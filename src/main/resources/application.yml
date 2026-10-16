@@ -1,0 +1,40 @@
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: ms-notifications
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        prefetch: 1
+        acknowledge-mode: manual
+
+rabbitmq:
+  exchange:
+    events: printworks.events
+
+  routing-key:
+    order-created: order.created
+
+  queues:
+    order-email: order.email.queue
+    order-audit: order.audit.queue
+
+  dlq:
+    order-email: order.email.dlq
+    order-audit: order.audit.dlq
+
+resend:
+  api-key: ${RESEND_API_KEY}
+  from: ${RESEND_FROM_EMAIL:onboarding@resend.dev}
+  notification-email: ${NOTIFICATION_EMAIL}
+
+logging:
+  level:
+    duoc.cn1.ms_notifications: INFO
+    org.springframework.amqp: INFO
