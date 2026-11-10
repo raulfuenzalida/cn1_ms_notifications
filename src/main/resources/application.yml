@@ -24,6 +24,7 @@ rabbitmq:
   queues:
     order-email: order.email.queue
     order-audit: order.audit.queue
+    ttl-ms: 60000
 
   dlq:
     order-email: order.email.dlq

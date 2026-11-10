@@ -38,6 +38,9 @@ public class RabbitConfig {
 	@Value("${rabbitmq.dlq.order-audit}")
 	private String orderAuditDlq;
 
+	@Value("${rabbitmq.queues.ttl-ms}")
+	private long queueTtlMs;
+
 	@Bean
 	public TopicExchange eventsExchange() {
 		return new TopicExchange(eventsExchange, true, false);
@@ -51,6 +54,7 @@ public class RabbitConfig {
 	@Bean
 	public Queue orderEmailQueue() {
 		return QueueBuilder.durable(orderEmailQueue)
+				.withArgument("x-message-ttl", queueTtlMs)
 				.withArgument("x-dead-letter-exchange", "printworks.dlx")
 				.withArgument("x-dead-letter-routing-key", orderEmailDlq)
 				.build();
@@ -59,6 +63,7 @@ public class RabbitConfig {
 	@Bean
 	public Queue orderAuditQueue() {
 		return QueueBuilder.durable(orderAuditQueue)
+				.withArgument("x-message-ttl", queueTtlMs)
 				.withArgument("x-dead-letter-exchange", "printworks.dlx")
 				.withArgument("x-dead-letter-routing-key", orderAuditDlq)
 				.build();
